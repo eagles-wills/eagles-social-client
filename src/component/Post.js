@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Card, Icon, Label, Image, Button } from "semantic-ui-react";
 import moment from "moment";
+import useStore from "../store";
+import LikePost from "./LikePost";
+import DeleteButton from "./DeleteButton";
 
 const Post = ({
-	post: { id, username, createdAt, body, likeCount, commentCount },
+	post: { id, username, createdAt, body, likeCount, commentCount, likes },
 }) => {
 	const [seed, setSeed] = useState("");
+	const user = useStore((state) => state.user);
+
 	useEffect(() => {
 		setSeed(Math.floor(Math.random() * 10000));
 	}, []);
@@ -18,28 +24,24 @@ const Post = ({
 					src={`https://avatars.dicebear.com/api/human/${seed}.svg`}
 				/>
 				<Card.Header>{username}</Card.Header>
-				<Card.Meta>{moment(createdAt).fromNow()}</Card.Meta>
+				<Card.Meta as={Link} to={`/posts/${id}`}>
+					{moment(createdAt).fromNow()}
+				</Card.Meta>
 				<Card.Description>{body}</Card.Description>
 			</Card.Content>
-			<Card.Content extra>
-				<Button as='div' labelPosition='right'>
-					<Button color='teal' basic>
-						<Icon name='heart' />
-						Like
-					</Button>
-					<Label color='teal' pointing='left'>
-						{likeCount}
-					</Label>
-				</Button>
-				<Button as='div' labelPosition='right'>
+			<Card.Content extra className='post__content'>
+				<LikePost post={{ id, likes, likeCount }} />
+				<Button labelPosition='right' as={Link} to={`/posts/${id}`}>
 					<Button color='blue' basic>
 						<Icon name='comments' />
-						Comment
 					</Button>
 					<Label color='blue' pointing='left'>
 						{commentCount}
 					</Label>
 				</Button>
+				{user && user.data.username === username && (
+					<DeleteButton postId={id} />
+				)}
 			</Card.Content>
 		</Card>
 	);

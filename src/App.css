@@ -9,3 +9,17 @@ body {
 .post__card {
 	margin: 10px 0;
 }
+
+.form {
+	width: 400px;
+	margin: auto;
+}
+
+.form__comment p {
+	text-align: center;
+	letter-spacing: 3px;
+}
+.ui.teal.button:focus,
+.ui.teal.buttons .button:focus {
+	background-color: #00b5ad;
+}
